@@ -1,0 +1,33 @@
+---
+import { site } from '../data/site';
+
+const team = [
+  { name: 'Hamza Qureshi', role: 'Managing Director', portrait: '/images/team/hamza-qureshi.webp' },
+  { name: 'Sana Malik', role: 'Head of Project Advisory', portrait: '/images/team/sana-malik.webp' },
+  { name: 'Bilal Sheikh', role: 'Client Relations Lead', portrait: '/images/team/bilal-sheikh.webp' },
+];
+---
+
+<section id="leadership" class="border-y border-rule bg-[#f0f1e9] py-16 md:py-22" aria-labelledby="leadership-title">
+  <div class="site-shell" data-reveal>
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="eyebrow mb-4 justify-center text-pine after:w-6 after:border-t after:border-current after:content-['']">Leadership</p>
+      <h2 id="leadership-title" class="section-heading text-balance">Meet the {site.name} team.</h2>
+      <p class="mx-auto mt-5 max-w-[34rem] leading-7 text-muted">Project research, property guidance, and client support for buyers in Islamabad and Rawalpindi.</p>
+    </div>
+
+    <ul class="mx-auto mt-9 grid max-w-sm gap-5 md:max-w-none md:grid-cols-3 md:gap-6" role="list">
+      {team.map(({ name, role, portrait }) => (
+        <li class="overflow-hidden rounded-xl border border-rule bg-surface">
+          <img src={portrait} alt="" loading="lazy" decoding="async" width="720" height="900" class="aspect-[4/5] w-full bg-[#e5e1d7] object-cover object-top" />
+          <div class="border-t border-rule px-5 py-5 text-center">
+            <h3 class="text-xl font-semibold tracking-tight">{name}</h3>
+            <p class="mt-1 text-sm text-muted">{role}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="mt-4 text-center text-xs text-muted">Placeholder names and portraits.</p>
+  </div>
+</section>

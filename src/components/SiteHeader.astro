@@ -1,0 +1,65 @@
+---
+import Brand from './Brand.astro';
+import Icon from './Icon.astro';
+import { navigation } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const links = navigation.map((link) => {
+  const isCurrentSection = link.href !== '/' && path.startsWith(link.href);
+  const current = link.href === path ? 'page' : isCurrentSection ? 'location' : undefined;
+  return { ...link, current };
+});
+---
+
+<header class="relative z-10 border-b border-rule bg-surface">
+  <div class="site-shell flex min-h-[4.5rem] items-center justify-between gap-5 md:min-h-[4.875rem]">
+    <Brand />
+
+    <nav class="hidden lg:block" aria-label="Main navigation">
+      <ul class="flex items-center gap-7 text-sm font-medium text-muted">
+        {links.map(({ label, href, current }) => (
+          <li>
+            <a href={href} aria-current={current} class:list={['py-2 transition-colors hover:text-pine', current && 'font-semibold text-ink underline decoration-sand decoration-2 underline-offset-8']}>
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="button button-pine hidden lg:inline-flex" href="/contact/#inquiry">Get in touch <Icon name="diagonal" /></a>
+
+    <details class="group lg:hidden" data-mobile-nav>
+      <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-full border border-rule text-pine [&::-webkit-details-marker]:hidden">
+        <span class="sr-only">Main menu</span>
+        <Icon name="menu" class="size-5 group-open:hidden" />
+        <Icon name="close" class="hidden size-5 group-open:block" />
+      </summary>
+      <nav class="absolute inset-x-0 top-full border-b border-rule bg-surface py-4 shadow-md" aria-label="Main navigation">
+        <ul class="site-shell grid gap-1 text-sm font-medium">
+          {links.map(({ label, href, current }) => (
+            <li><a class:list={['block rounded px-2 py-3 hover:bg-paper', current && 'bg-paper font-semibold text-pine']} href={href} aria-current={current}>{label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('[data-mobile-nav]');
+
+  menu?.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('a')) {
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    }
+  });
+
+  menu?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu.open) {
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    }
+  });
+</script>

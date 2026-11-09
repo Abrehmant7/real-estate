@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+
+<address class="grid gap-5 text-sm leading-6 text-muted not-italic">
+  <div class="flex items-start gap-3">
+    <Icon name="pin" class="mt-1 size-4 shrink-0 text-pine" />
+    <div>
+      <p class="font-semibold text-ink">Islamabad office</p>
+      <p>{site.address[0]}<br />{site.address[1]}</p>
+    </div>
+  </div>
+  <div class="flex items-start gap-3">
+    <Icon name="mail" class="mt-1 size-4 shrink-0 text-pine" />
+    <div>
+      <p class="font-semibold text-ink">Email</p>
+      <a class="break-all hover:text-pine hover:underline" href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+  </div>
+</address>
+<p class="mt-5 text-xs text-muted">Sample office and email details.</p>

@@ -1,0 +1,33 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  item: string;
+  controls: string;
+  light?: boolean;
+  rotation?: boolean;
+}
+
+const { item, controls, light = false, rotation = false } = Astro.props;
+const colors = light
+  ? 'border-white/45 bg-deep-pine/70 text-white hover:bg-deep-pine'
+  : 'border-rule bg-surface text-pine hover:border-pine';
+const button = 'grid size-11 cursor-pointer place-items-center rounded-full border transition-colors disabled:cursor-default disabled:opacity-35 motion-reduce:transition-none';
+---
+
+<div hidden data-carousel-controls class="flex shrink-0 items-center gap-2" role="group" aria-label={`${item} controls`}>
+  {rotation && (
+    <button type="button" data-hero-rotation aria-label="Pause slideshow" aria-controls={controls} class:list={['group', button, colors]}>
+      <Icon name="play" class="size-4 group-data-[playing]:hidden" />
+      <Icon name="pause" class="hidden size-4 group-data-[playing]:block" />
+    </button>
+  )}
+  <slot />
+  <button type="button" data-carousel-prev aria-label={`Previous ${item}`} aria-controls={controls} class:list={[button, colors]}>
+    <Icon name="arrow" class="size-4 rotate-180" />
+  </button>
+  <button type="button" data-carousel-next aria-label={`Next ${item}`} aria-controls={controls} class:list={[button, colors]}>
+    <Icon name="arrow" />
+  </button>
+</div>
+

@@ -1,0 +1,17 @@
+---
+import OfficeDetails from '../components/OfficeDetails.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ProjectInquiry from '../components/ProjectInquiry.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { site } from '../data/site';
+---
+
+<SiteLayout title={`Contact | ${site.name}`} description={`Contact ${site.name} in Islamabad with questions about a property or to arrange a site visit.`}>
+  <PageIntro eyebrow="Get in touch" title="Contact us." description="Speak with our Islamabad team about a project or a property search." />
+
+  <ProjectInquiry>
+    <div slot="details" class="mt-8 max-w-[25rem] border-t border-rule pt-6">
+      <OfficeDetails />
+    </div>
+  </ProjectInquiry>
+</SiteLayout>

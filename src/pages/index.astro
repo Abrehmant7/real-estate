@@ -1,0 +1,89 @@
+---
+import BuyingProcess from '../components/BuyingProcess.astro';
+import FeaturedProjects from '../components/FeaturedProjects.astro';
+import HomeHero from '../components/HomeHero.astro';
+import Icon from '../components/Icon.astro';
+import LeadershipTeam from '../components/LeadershipTeam.astro';
+import OfficeDetails from '../components/OfficeDetails.astro';
+import ProjectInquiry from '../components/ProjectInquiry.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { site } from '../data/site';
+
+const comparisonPoints = [
+  {
+    title: 'Location and access',
+    description: 'Look at the routes you’d use every day and how close the property is to work, schools, and services.',
+  },
+  {
+    title: 'Space and surroundings',
+    description: 'Compare plot sizes or layouts, the street around the property, and how the space fits what you plan to do with it.',
+  },
+  {
+    title: 'Costs and timing',
+    description: 'Compare the total cost, payment dates, and when you expect to be able to build or move in.',
+  },
+];
+---
+
+<SiteLayout title={`${site.name} | Islamabad Property Advisors`} description={`Explore five real estate projects in the Islamabad and Rawalpindi area with local property guidance from ${site.name}.`}>
+  <HomeHero />
+  <FeaturedProjects />
+  <ProjectInquiry />
+
+  <section id="approach" class="scroll-mt-6 bg-pine py-18 text-paper md:py-24" aria-labelledby="approach-title">
+    <div class="site-shell" data-reveal>
+      <div class="grid gap-5 md:grid-cols-[1.4fr_0.75fr] md:items-end md:gap-12">
+        <div>
+          <p class="eyebrow mb-4 text-sand">Our approach</p>
+          <h2 id="approach-title" class="section-heading">What we help you compare.</h2>
+        </div>
+        <p class="max-w-[25rem] text-base leading-7 text-white/80 md:justify-self-end">
+          We look at each option in the context of how you’ll use it, whether you plan to live there, build, or hold it for later.
+        </p>
+      </div>
+
+      <ul class="mt-10 grid gap-8 md:mt-12 md:grid-cols-3 md:gap-7" role="list">
+        {comparisonPoints.map((point) => (
+          <li class="border-t border-white/25 pt-5 md:pt-6">
+            <h3 class="text-lg font-semibold tracking-tight text-sand">{point.title}</h3>
+            <p class="mt-2 max-w-[23rem] text-sm leading-6 text-white/78">{point.description}</p>
+          </li>
+        ))}
+      </ul>
+      <a class="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sand hover:underline" href="/about/">About {site.name} <Icon name="arrow" /></a>
+    </div>
+  </section>
+
+  <BuyingProcess />
+  <LeadershipTeam />
+
+  <section id="contact" class="site-shell scroll-mt-6 py-16 md:py-22" aria-labelledby="contact-title">
+    <div class="grid gap-8 rounded-2xl border border-rule bg-surface p-7 sm:p-10 md:grid-cols-[1.45fr_1fr] md:items-center md:gap-12 lg:p-14" data-reveal>
+      <div>
+        <p class="eyebrow mb-4 text-pine">Get in touch</p>
+        <h2 id="contact-title" class="section-heading">Let’s talk property.</h2>
+        <p class="mt-4 max-w-[28rem] text-base leading-7 text-muted">Tell us what you’re looking for and which areas of Islamabad you have in mind.</p>
+        <a class="button button-pine mt-6" href="/contact/">Contact our team <Icon name="diagonal" /></a>
+      </div>
+
+      <div class="border-t border-rule pt-7 md:border-t-0 md:border-l md:py-4 md:pl-10 lg:pl-14">
+        <OfficeDetails />
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.setAttribute('data-revealed', '');
+          observer.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('[data-reveal]').forEach((section) => observer.observe(section));
+  }
+</script>

@@ -1,0 +1,47 @@
+---
+import Icon from './Icon.astro';
+
+const steps = [
+  {
+    icon: 'chat',
+    title: 'Share your plans',
+    description: 'Tell us where you’d like to buy, what you’re looking for, and the budget you want to work within.',
+  },
+  {
+    icon: 'building',
+    title: 'Shortlist and visit',
+    description: 'Compare a few projects, then see how the location, access, and surroundings feel on a site visit.',
+  },
+  {
+    icon: 'clipboard',
+    title: 'Review the booking',
+    description: 'Go through the payment schedule, charges, and documents for the specific property you’ve chosen.',
+  },
+  {
+    icon: 'key',
+    title: 'Plan the handover',
+    description: 'Confirm the steps for transfer and possession, and keep your receipts and paperwork together.',
+  },
+] as const;
+---
+
+<section id="buying-process" class="site-shell scroll-mt-6 py-16 md:py-22" aria-labelledby="buying-process-title">
+  <div data-reveal>
+    <p class="eyebrow mb-4 text-pine">The buying process</p>
+    <h2 id="buying-process-title" class="section-heading">From first call to handover.</h2>
+    <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted">Here’s what you can expect at each stage of buying a property.</p>
+
+    <ol class="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" role="list">
+      {steps.map((step, index) => (
+        <li class="rounded-xl border border-rule bg-surface p-6">
+          <div class="flex items-center justify-between gap-3" aria-hidden="true">
+            <span class="grid size-11 place-items-center rounded-lg bg-[#e9eee6] text-pine"><Icon name={step.icon} class="size-5" /></span>
+            <span class="text-xs font-semibold tracking-[0.12em] text-muted tabular-nums">{String(index + 1).padStart(2, '0')}</span>
+          </div>
+          <h3 class="mt-6 text-lg font-semibold tracking-tight">{step.title}</h3>
+          <p class="mt-2 text-sm leading-6 text-muted">{step.description}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

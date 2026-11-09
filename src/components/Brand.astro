@@ -1,0 +1,21 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  light?: boolean;
+}
+
+const { light = false } = Astro.props;
+---
+
+<a href="/" class="inline-flex w-fit items-center gap-3" aria-label={`${site.name} home`}>
+  <span class:list={['grid size-10 shrink-0 place-items-center rounded-[0.55rem] border', light ? 'border-white/25 text-sand' : 'border-pine bg-pine text-paper']}>
+    <svg class="size-[1.65rem]" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m4 21 8-9 5 5 4-8 7 12M8 24h16M12 21l4-5" />
+    </svg>
+  </span>
+  <span class="flex flex-col gap-0.5">
+    <span class="text-[1.3rem] leading-none font-semibold tracking-[-0.045em]">{site.name}</span>
+    <span class:list={['text-[0.55rem] font-semibold tracking-[0.18em] uppercase', light ? 'text-sand' : 'text-muted']}>{site.descriptor}</span>
+  </span>
+</a>

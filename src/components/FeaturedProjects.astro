@@ -1,0 +1,76 @@
+---
+import CarouselControls from './CarouselControls.astro';
+import Icon from './Icon.astro';
+import ProjectCard from './ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<section id="projects" data-project-carousel class="site-shell scroll-mt-6 py-18 md:py-25" aria-labelledby="projects-title">
+  <div class="mb-8 flex flex-wrap items-end justify-between gap-5" data-reveal>
+    <div>
+      <p class="eyebrow mb-4 text-pine">Our projects</p>
+      <h2 id="projects-title" class="section-heading">Explore our projects.</h2>
+      <p class="mt-4 max-w-[34rem] text-base leading-7 text-muted">Browse five developments in the Islamabad and Rawalpindi area and ask us about the ones you’re considering.</p>
+    </div>
+    <CarouselControls item="project" controls="project-cards" />
+  </div>
+
+  <ol id="project-cards" data-project-track class="project-track grid snap-x snap-mandatory auto-cols-[86%] grid-flow-col gap-5 overflow-x-auto pb-4" tabindex="0" aria-label="Project cards">
+    {projects.map((project) => (
+      <li class="snap-start">
+        <ProjectCard project={project} onHomepage />
+      </li>
+    ))}
+  </ol>
+  <a class="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-pine hover:underline" href="/projects/">View all projects <Icon name="arrow" /></a>
+</section>
+
+<script>
+  const carousel = document.querySelector('[data-project-carousel]');
+  const track = carousel?.querySelector<HTMLElement>('[data-project-track]');
+  const controls = carousel?.querySelector<HTMLElement>('[data-carousel-controls]');
+  const previous = controls?.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+  const next = controls?.querySelector<HTMLButtonElement>('[data-carousel-next]');
+
+  if (track && controls && previous && next) {
+    const cards = Array.from(track.children);
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const updateControls = () => {
+      const end = track.scrollWidth - track.clientWidth;
+      previous.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= end - 1;
+    };
+
+    const move = (direction: number) => {
+      const distance = cards[1].getBoundingClientRect().left - cards[0].getBoundingClientRect().left;
+      track.scrollBy({ left: distance * direction, behavior: motion.matches ? 'instant' : 'smooth' });
+    };
+
+    previous.addEventListener('click', () => move(-1));
+    next.addEventListener('click', () => move(1));
+    track.addEventListener('scroll', updateControls, { passive: true });
+    new ResizeObserver(updateControls).observe(track);
+    updateControls();
+    controls.hidden = false;
+  }
+</script>
+
+<style>
+  .project-track {
+    scrollbar-width: thin;
+    scrollbar-color: #9da79f var(--color-rule);
+  }
+
+  @media (min-width: 40rem) {
+    .project-track {
+      grid-auto-columns: calc((100% - 1.25rem) / 2);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .project-track {
+      grid-auto-columns: calc((100% - 2.5rem) / 3);
+    }
+  }
+</style>

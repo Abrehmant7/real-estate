@@ -1,0 +1,154 @@
+---
+import CarouselControls from './CarouselControls.astro';
+import Icon from './Icon.astro';
+
+const images = [
+  '/images/hero-margalla-residence.webp',
+  '/images/hero-tree-lined-neighborhood.webp',
+  '/images/hero-garden-apartments.webp',
+  '/images/hero-hillside-outlook.webp',
+];
+---
+
+<section data-hero-carousel class="hero relative isolate flex min-h-[37rem] items-center overflow-hidden bg-deep-pine text-paper md:min-h-[clamp(38rem,49vw,45rem)]" aria-labelledby="hero-title">
+  <div id="hero-images" class="absolute inset-0 -z-20" aria-hidden="true">
+    {images.map((image, index) => (
+      <img
+        data-hero-image
+        data-active={index === 0 ? '' : undefined}
+        class="hero-image absolute inset-0 size-full object-cover"
+        src={image}
+        alt=""
+        fetchpriority={index === 0 ? 'high' : 'low'}
+        decoding={index === 0 ? 'auto' : 'async'}
+      />
+    ))}
+  </div>
+  <div class="hero-shade absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <div class="site-shell pt-20 pb-28 md:py-24" data-revealed>
+    <p class="eyebrow mb-6 text-sand">Islamabad property advisors</p>
+    <h1 id="hero-title" class="text-[clamp(2.65rem,6.8vw,6.1rem)] leading-[0.99] font-semibold tracking-[-0.065em]">
+      Find your place <span class="block text-sand">in Islamabad.</span>
+    </h1>
+    <p class="mt-6 max-w-[26rem] text-base leading-7 text-white/90 md:text-lg">
+      Local guidance for buying a home, finding a plot, or investing in Islamabad property.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+      <a class="button button-cream" href="#projects">Explore projects <Icon name="arrow" /></a>
+      <a class="inline-flex min-h-12 items-center gap-2 px-1 text-sm font-semibold hover:underline" href="#approach">Our approach <Icon name="diagonal" /></a>
+    </div>
+  </div>
+
+  <div class="absolute inset-x-0 bottom-0">
+    <div class="site-shell flex flex-wrap items-center justify-between gap-2 border-t border-white/28 py-3 sm:py-4">
+      <CarouselControls item="hero image" controls="hero-images" light rotation>
+        <span class="sr-only" data-hero-status role="status" aria-live="off">Image 1 of {images.length}</span>
+        <span class="mr-1 text-xs font-semibold tabular-nums" data-hero-counter aria-hidden="true">01 / 0{images.length}</span>
+      </CarouselControls>
+      <span class="ml-auto rounded-full bg-deep-pine/80 px-3 py-1.5 text-xs text-white">Illustrative imagery</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  const hero = document.querySelector('[data-hero-carousel]');
+  const images = Array.from(hero?.querySelectorAll('[data-hero-image]') ?? []);
+  const controls = hero?.querySelector<HTMLElement>('[data-carousel-controls]');
+  const counter = hero?.querySelector('[data-hero-counter]');
+  const status = hero?.querySelector('[data-hero-status]');
+  const rotation = controls?.querySelector<HTMLButtonElement>('[data-hero-rotation]');
+  const format = (value: number) => String(value).padStart(2, '0');
+
+  if (hero && controls && counter && status && rotation && images.length > 1) {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let current = 0;
+    let timer: number | undefined;
+    let playing = false;
+    let hovered = false;
+
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (playing && !hovered && !document.hidden) {
+        timer = window.setTimeout(() => move(1), 3000);
+      }
+    };
+
+    const move = (direction: number) => {
+      images[current].removeAttribute('data-active');
+      current = (current + direction + images.length) % images.length;
+      images[current].setAttribute('data-active', '');
+      counter.textContent = `${format(current + 1)} / ${format(images.length)}`;
+      status.textContent = `Image ${current + 1} of ${images.length}`;
+      schedule();
+    };
+
+    const setPlaying = (enabled: boolean) => {
+      playing = enabled;
+      rotation.toggleAttribute('data-playing', playing);
+      rotation.setAttribute('aria-label', playing ? 'Pause slideshow' : 'Play slideshow');
+      status.setAttribute('aria-live', playing ? 'off' : 'polite');
+      schedule();
+    };
+
+    controls.querySelector('[data-carousel-prev]')?.addEventListener('click', () => move(-1));
+    controls.querySelector('[data-carousel-next]')?.addEventListener('click', () => move(1));
+    rotation.addEventListener('click', () => {
+      if (!playing) hovered = false;
+      setPlaying(!playing);
+    });
+    controls.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      hovered = true;
+      schedule();
+    });
+    controls.addEventListener('pointerleave', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      hovered = false;
+      schedule();
+    });
+    hero.addEventListener('focusin', (event) => {
+      if (event.target instanceof HTMLElement && event.target.matches(':focus-visible')) setPlaying(false);
+    });
+    motion.addEventListener('change', () => {
+      if (motion.matches) setPlaying(false);
+    });
+    document.addEventListener('visibilitychange', schedule);
+    setPlaying(!motion.matches);
+    controls.hidden = false;
+  }
+</script>
+
+<style>
+  .hero-image {
+    object-position: 60% 50%;
+    opacity: 0;
+    transition: opacity 600ms ease;
+  }
+
+  .hero-image:last-child {
+    object-position: 55% 50%;
+  }
+
+  .hero-image[data-active] {
+    opacity: 1;
+  }
+
+  .hero-shade {
+    background: linear-gradient(90deg, rgb(10 29 22 / 88%), rgb(10 29 22 / 66%) 38%, rgb(10 29 22 / 10%) 78%),
+      linear-gradient(0deg, rgb(10 29 22 / 50%), transparent 28%);
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero-shade {
+      background: linear-gradient(90deg, rgb(10 29 22 / 86%), rgb(10 29 22 / 54%)),
+        linear-gradient(0deg, rgb(10 29 22 / 45%), transparent 25%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-image {
+      transition: none;
+    }
+  }
+</style>

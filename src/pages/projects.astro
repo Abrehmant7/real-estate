@@ -1,0 +1,26 @@
+---
+import Icon from '../components/Icon.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { projects } from '../data/projects';
+import { site } from '../data/site';
+---
+
+<SiteLayout title={`Projects | ${site.name}`} description={`Browse Faisal Town, Faisal Hills, Park View City, Saffron City, and Blue World City with ${site.name}.`}>
+  <PageIntro eyebrow="Our portfolio" title="Explore our projects." description="Browse developments in Islamabad and Rawalpindi and get in touch about the ones you’re considering." />
+
+  <section class="site-shell py-16 md:py-22" aria-labelledby="developments-title">
+    <h2 id="developments-title" class="section-heading mb-8">Featured developments</h2>
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="list">
+      {projects.map((project) => <li><ProjectCard project={project} /></li>)}
+    </ul>
+  </section>
+
+  <section class="border-t border-rule bg-[#f0f1e9] py-12" aria-labelledby="projects-contact">
+    <div class="site-shell flex flex-wrap items-center justify-between gap-5">
+      <h2 id="projects-contact" class="text-2xl font-semibold tracking-tight md:text-3xl">Want help comparing projects?</h2>
+      <a class="button button-pine" href="/contact/#inquiry">Ask our team <Icon name="diagonal" /></a>
+    </div>
+  </section>
+</SiteLayout>

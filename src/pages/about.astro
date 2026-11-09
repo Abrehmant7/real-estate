@@ -1,0 +1,33 @@
+---
+import BuyingProcess from '../components/BuyingProcess.astro';
+import Icon from '../components/Icon.astro';
+import PageIntro from '../components/PageIntro.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { site } from '../data/site';
+---
+
+<SiteLayout title={`About Us | ${site.name}`} description={`Meet ${site.name}, a property advisory firm serving buyers in Islamabad and Rawalpindi.`}>
+  <PageIntro eyebrow="Islamabad property advisors" title={`About ${site.name}`} description="We help buyers compare developments and plan their next steps in Islamabad and Rawalpindi." />
+
+  <section class="border-b border-rule bg-surface py-16 md:py-22" aria-labelledby="about-role">
+    <div class="site-shell grid gap-9 lg:grid-cols-2 lg:items-center lg:gap-16">
+      <div>
+        <p class="eyebrow mb-4 text-pine">Our role</p>
+        <h2 id="about-role" class="section-heading">Start with how you’ll use the property.</h2>
+        <p class="mt-5 max-w-[33rem] leading-7 text-muted">A family home, a plot to build on, and a property you plan to hold call for different questions. We start with your plans, preferred areas, and budget, then help you decide which projects are worth visiting.</p>
+        <p class="mt-4 max-w-[33rem] leading-7 text-muted">For each option, we look at access, the surrounding neighbourhood, payment terms, and the details you’ll want to confirm before booking.</p>
+        <a class="button button-pine mt-6" href="/projects/">Browse our projects <Icon name="arrow" /></a>
+      </div>
+      <img src="/images/islamabad-skyline.webp" alt="Faisal Mosque and Islamabad viewed from the Margalla Hills" width="1760" height="1220" class="aspect-[8/5] w-full rounded-2xl object-cover" />
+    </div>
+  </section>
+
+  <BuyingProcess />
+
+  <section class="border-t border-rule bg-[#f0f1e9] py-12" aria-labelledby="about-contact">
+    <div class="site-shell flex flex-wrap items-center justify-between gap-5">
+      <h2 id="about-contact" class="text-2xl font-semibold tracking-tight md:text-3xl">Tell us what you’re looking for.</h2>
+      <a class="button button-pine" href="/contact/#inquiry">Contact our team <Icon name="diagonal" /></a>
+    </div>
+  </section>
+</SiteLayout>

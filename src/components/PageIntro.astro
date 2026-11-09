@@ -1,0 +1,17 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
+const { eyebrow, title, description } = Astro.props;
+---
+
+<section aria-labelledby="page-title" class="bg-pine bg-[radial-gradient(ellipse_at_top_right,#2c4c3e,transparent_65%)] py-16 text-paper md:py-22">
+  <div class="site-shell">
+    <p class="eyebrow mb-5 text-sand">{eyebrow}</p>
+    <h1 id="page-title" class="max-w-4xl text-[clamp(2.75rem,6vw,5.25rem)] leading-[1.02] font-semibold tracking-[-0.06em]">{title}</h1>
+    <p class="mt-5 max-w-[35rem] text-base leading-7 text-white/85 md:text-lg">{description}</p>
+  </div>
+</section>

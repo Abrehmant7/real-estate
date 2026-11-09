@@ -1,0 +1,82 @@
+---
+import Icon from './Icon.astro';
+import { projects } from '../data/projects';
+import { site } from '../data/site';
+
+const field = 'mt-2 min-h-12 w-full rounded-lg border border-rule bg-paper px-3.5 py-2.5 text-base text-ink';
+---
+
+<section id="inquiry" class="border-y border-rule bg-[#f0f1e9] py-16 md:py-22" aria-labelledby="inquiry-title">
+  <div class="site-shell grid gap-9 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-18" data-reveal>
+    <div class="lg:pt-5">
+      <p class="eyebrow mb-4 text-pine">Project inquiries</p>
+      <h2 id="inquiry-title" class="section-heading max-w-[29rem]">Have a project in mind?</h2>
+      <p class="mt-5 max-w-[25rem] text-base leading-7 text-muted">Tell us which development you’re considering and what you’d like to know, from plot sizes to arranging a site visit.</p>
+      <slot name="details" />
+    </div>
+
+    <form data-project-inquiry action={`mailto:${site.email}`} method="post" enctype="text/plain" class="rounded-2xl border border-rule bg-surface p-5 sm:p-8" aria-describedby="inquiry-delivery">
+      <div class="grid gap-x-5 gap-y-5 sm:grid-cols-2">
+        <label class="block text-sm font-semibold">
+          Full name
+          <input name="Full name" type="text" autocomplete="name" maxlength="80" required class={field} />
+        </label>
+        <label class="block text-sm font-semibold">
+          Email address
+          <input name="Email" type="email" autocomplete="email" maxlength="160" required class={field} />
+        </label>
+        <label class="block text-sm font-semibold">
+          Phone <span class="font-normal text-muted">(optional)</span>
+          <input name="Phone" type="tel" autocomplete="tel" maxlength="32" class={field} />
+        </label>
+        <label class="block text-sm font-semibold">
+          Project
+          <select name="Project" data-inquiry-project-select class={field}>
+            <option value="">Still exploring</option>
+            {projects.map(({ name, slug }) => <option value={name} data-project-slug={slug}>{name}</option>)}
+          </select>
+        </label>
+        <label class="block text-sm font-semibold sm:col-span-2">
+          What would you like to know?
+          <textarea name="Message" rows="3" maxlength="500" required class:list={[field, 'block resize-y']}></textarea>
+        </label>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3">
+        <button type="submit" class="button button-pine cursor-pointer">Open email draft <Icon name="diagonal" /></button>
+        <p id="inquiry-delivery" class="max-w-56 text-xs leading-5 text-muted">Review and send your inquiry from your email app.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-project-inquiry]');
+  const projectSelect = form?.querySelector<HTMLSelectElement>('[data-inquiry-project-select]');
+
+  if (form && projectSelect) {
+    const requestedProject = new URLSearchParams(window.location.search).get('project');
+    if (requestedProject) {
+      const option = Array.from(projectSelect.options).find((item) => item.dataset.projectSlug === requestedProject);
+      if (option) projectSelect.value = option.value;
+    }
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-inquiry-project]').forEach((link) => {
+      link.addEventListener('click', () => {
+        projectSelect.value = link.dataset.inquiryProject ?? '';
+      });
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const fields = new FormData(form);
+      const subject = projectSelect.value ? `${projectSelect.value} inquiry` : 'Property inquiry';
+      const body = Array.from(fields)
+        .filter(([, value]) => value)
+        .map(([label, value]) => `${label}: ${value}`)
+        .join('\r\n');
+
+      window.location.href = `${form.action}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  }
+</script>
