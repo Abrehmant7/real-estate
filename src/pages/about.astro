@@ -16,18 +16,20 @@ import { site } from '../data/site';
         <h2 id="about-role" class="section-heading">Start with how you’ll use the property.</h2>
         <p class="mt-5 max-w-[33rem] leading-7 text-muted">A family home, a plot to build on, and a property you plan to hold call for different questions. We start with your plans, preferred areas, and budget, then help you decide which projects are worth visiting.</p>
         <p class="mt-4 max-w-[33rem] leading-7 text-muted">For each option, we look at access, the surrounding neighbourhood, payment terms, and the details you’ll want to confirm before booking.</p>
-        <a class="button button-pine mt-6" href="/projects/">Browse our projects <Icon name="arrow" /></a>
+        <a class="button mt-6" href="/projects/">Browse our projects <Icon name="arrow" /></a>
       </div>
-      <img src="/images/islamabad-skyline.webp" alt="Faisal Mosque and Islamabad viewed from the Margalla Hills" width="1760" height="1220" class="aspect-[8/5] w-full rounded-2xl object-cover" />
+      <div class="grid aspect-[8/5] w-full place-items-center rounded-2xl border border-rule bg-paper px-[14%]">
+        <img src="/logos/rove-estates-on-light.svg" alt={site.name} width="1807" height="601" class="h-auto w-full max-w-96" />
+      </div>
     </div>
   </section>
 
   <BuyingProcess />
 
-  <section class="border-t border-rule bg-[#f0f1e9] py-12" aria-labelledby="about-contact">
+  <section class="border-t border-rule bg-panel py-12" aria-labelledby="about-contact">
     <div class="site-shell flex flex-wrap items-center justify-between gap-5">
       <h2 id="about-contact" class="text-2xl font-semibold tracking-tight md:text-3xl">Tell us what you’re looking for.</h2>
-      <a class="button button-pine" href="/contact/#inquiry">Contact our team <Icon name="diagonal" /></a>
+      <a class="button" href="/contact/#inquiry">Contact our team <Icon name="diagonal" /></a>
     </div>
   </section>
 </SiteLayout>

@@ -1,15 +1,34 @@
 @import "tailwindcss" source("../");
 
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/bricolage-grotesque.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
 @theme {
-  --color-paper: #faf8f2;
-  --color-surface: #fffefa;
-  --color-ink: #172c24;
-  --color-muted: #526059;
-  --color-pine: #19382c;
-  --color-deep-pine: #10291f;
-  --color-sand: #e0c59b;
-  --color-rule: #e4e1d6;
-  --font-sans: "Segoe UI", system-ui, sans-serif;
+  --color-paper: #faf6eb;
+  --color-surface: #fffdf7;
+  --color-ink: #201b14;
+  --color-muted: #62584b;
+  --color-pine: #211d17;
+  --color-deep-pine: #13110e;
+  --color-sand: #efc56c;
+  --color-rule: #e3d7c1;
+  --color-panel: #f0e8d8;
+  --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
+}
+
+:root {
+  --rove-gold: #dba52f;
+  scroll-padding-top: 5rem;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
 }
 
 @layer base {
@@ -50,29 +69,51 @@
   .eyebrow::before {
     content: "";
     width: 1.6rem;
-    border-top: 1px solid currentColor;
+    border-top: 1px solid var(--rove-gold);
   }
 
   .section-heading {
-    @apply text-[clamp(2.35rem,4.8vw,4.1rem)] leading-[1.04] font-semibold tracking-[-0.055em];
+    @apply text-[clamp(2.35rem,4.8vw,4.1rem)] leading-[1.04] font-semibold tracking-[-0.04em];
   }
 
   .button {
-    @apply inline-flex min-h-12 w-fit items-center justify-center gap-3 rounded-full px-5 py-3 text-sm font-semibold transition-colors;
-  }
-
-  .button-pine {
-    @apply bg-pine text-white hover:bg-deep-pine;
-  }
-
-  .button-cream {
-    @apply bg-paper text-ink hover:bg-sand;
+    @apply inline-flex min-h-12 w-fit items-center justify-center gap-3 rounded-full bg-[var(--rove-gold)] px-5 py-3 text-sm font-semibold text-[#19140d] transition-colors hover:bg-sand;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   [data-revealed] {
-    animation: reveal-up 550ms cubic-bezier(0.2, 0.65, 0.35, 1) both;
+    animation: reveal-up 550ms cubic-bezier(0.2, 0.65, 0.35, 1) var(--reveal-delay, 0ms) both;
+  }
+
+  [data-revealed]:focus-within {
+    animation: none;
+  }
+
+  :is(.eyebrow[data-revealed], [data-revealed] .eyebrow)::before {
+    animation: draw-eyebrow 650ms cubic-bezier(0.2, 0.65, 0.35, 1) var(--reveal-delay, 0ms) both;
+    transform-origin: left;
+  }
+
+  .home-scroll-progress {
+    position: fixed;
+    z-index: 30;
+    inset: 0 0 auto;
+    height: 2px;
+    pointer-events: none;
+    background: var(--rove-gold);
+    transform: scaleX(var(--scroll-progress, 0));
+    transform-origin: left;
+  }
+
+  #hero-images {
+    transform: translateY(var(--hero-offset, 0px)) scale(1.08);
+  }
+
+  @keyframes draw-eyebrow {
+    from {
+      transform: scaleX(0);
+    }
   }
 
   @keyframes reveal-up {

@@ -1,0 +1,34 @@
+---
+import type { ProjectLandmark } from '../data/projects';
+
+interface Props {
+  landmarks: ProjectLandmark[];
+  title: string;
+  headingId: string;
+}
+
+const { landmarks, title, headingId } = Astro.props;
+const singleLandmark = landmarks.length === 1;
+---
+
+<section aria-labelledby={headingId}>
+  <h2 id={headingId} class="mb-6 text-[clamp(1.7rem,3.2vw,2.65rem)] leading-tight font-semibold tracking-tight">{title}</h2>
+  <div class:list={['grid gap-5', landmarks.length === 2 && 'md:grid-cols-2', landmarks.length > 2 && 'sm:grid-cols-2 lg:grid-cols-3']}>
+    {landmarks.map(({ title, description, images, credit }) => (
+      <article class:list={['overflow-hidden rounded-2xl border border-rule bg-surface', singleLandmark && 'grid md:grid-cols-[1.1fr_1fr] md:items-center']}>
+        <figure>
+          <div class:list={['grid overflow-hidden bg-panel', singleLandmark ? 'aspect-[16/9]' : 'aspect-[5/4]', images.length > 1 && 'grid-cols-[1.4fr_1fr] gap-0.5']}>
+            {images.map(({ src, alt }) => (
+              <img src={src} alt={alt} loading="lazy" decoding="async" class="size-full min-h-0 min-w-0 object-cover" />
+            ))}
+          </div>
+          {credit && <figcaption class="border-t border-rule px-4 py-2 text-xs text-muted">{credit}</figcaption>}
+        </figure>
+        <div class:list={['p-5 sm:p-6', singleLandmark && 'md:p-9']}>
+          <h3 class="text-xl leading-tight font-semibold tracking-tight md:text-2xl">{title}</h3>
+          <p class="mt-2 max-w-xl leading-7 text-muted">{description}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

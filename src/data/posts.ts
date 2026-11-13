@@ -64,4 +64,4 @@ export const posts = [
   },
 ];
 
-export type Post = (typeof posts)[number];
+export type Post = (typeof posts)[number] & { sources?: { label: string; href: string }[] };

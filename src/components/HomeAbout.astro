@@ -1,0 +1,73 @@
+---
+import { site } from '../data/site';
+---
+
+<section id="about-us" class="border-b border-rule bg-surface py-12 md:py-16" aria-labelledby="home-about-title">
+  <div class="site-shell grid items-center gap-8 md:grid-cols-[1fr_1.05fr] lg:gap-16">
+    <div class="about-story pl-5 sm:pl-7" data-about-story>
+      <div data-reveal>
+        <h2 id="home-about-title" class="section-heading">About {site.name}</h2>
+        <p class="mt-4 max-w-lg leading-7 text-muted">
+          We’re an Islamabad-based real estate advisory team. We help families and investors narrow down projects in Islamabad and Rawalpindi, understand the costs and timelines, and plan visits to the properties that fit.
+        </p>
+      </div>
+
+      <div class="mt-6 border-t border-rule pt-5" data-reveal>
+        <h3 class="text-xl font-semibold tracking-tight md:text-2xl">Our vision</h3>
+        <p class="mt-2 max-w-lg leading-7 text-muted">
+          We want buyers to feel confident about what they’re paying for and what they can expect after booking. That starts with clear information, time to ask questions, and knowing which details to verify before committing.
+        </p>
+      </div>
+    </div>
+
+    <div class="about-logo grid aspect-[8/5] w-full place-items-center rounded-2xl border border-rule bg-paper px-[14%]" data-reveal>
+      <img src="/logos/rove-estates-on-light.svg" alt={site.name} width="1807" height="601" loading="lazy" decoding="async" class="h-auto w-full max-w-96" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-story {
+    position: relative;
+  }
+
+  .about-story::before,
+  .about-story::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 2px;
+    border-radius: 999px;
+  }
+
+  .about-story::before {
+    background: var(--color-rule);
+  }
+
+  .about-story::after {
+    background: var(--rove-gold);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-story::after {
+      transform: scaleY(var(--about-progress, 1));
+      transform-origin: top;
+    }
+
+    .about-logo[data-revealed] {
+      animation: reveal-logo 850ms cubic-bezier(0.2, 0.65, 0.35, 1) both;
+    }
+
+    @keyframes reveal-logo {
+      from {
+        clip-path: inset(0 26% 0 0 round 1rem);
+        opacity: 0.5;
+      }
+
+      to {
+        clip-path: inset(0 round 1rem);
+        opacity: 1;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import { homePosts } from '../data/homePosts';
+---
+
+<section id="insights" class="scroll-mt-6 bg-pine py-12 text-paper md:py-16" aria-labelledby="insights-title">
+  <div class="site-shell">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-4" data-reveal>
+      <div>
+        <p class="eyebrow mb-4 text-sand">The Rove Journal</p>
+        <h2 id="insights-title" class="section-heading">Pakistan property insights.</h2>
+      </div>
+      <a class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sand underline decoration-sand/55 underline-offset-5 hover:decoration-current" href="/blog/">More buyer guides <Icon name="arrow" /></a>
+    </div>
+
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="list">
+      {homePosts.map((post, index) => (
+        <li data-reveal style={`--reveal-delay: ${(index % 3) * 65}ms`}>
+          <article class="group flex h-full flex-col overflow-hidden rounded-xl border border-sand/22 bg-white/5 transition-colors hover:border-sand/55">
+            <div class="aspect-[2/1] max-h-44 overflow-hidden bg-deep-pine">
+              <img src={post.image} alt="" loading="lazy" decoding="async" class="size-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-105" />
+            </div>
+            <div class="flex grow flex-col px-5 pt-4 pb-3">
+              <p class="text-xs font-semibold tracking-[0.12em] text-sand uppercase">{post.category}</p>
+              <h3 class="mt-2 text-xl leading-tight font-semibold tracking-tight">{post.title}</h3>
+              <p class="mt-2 mb-2 text-sm leading-5 text-white/75">{post.description}</p>
+              <a href={`/blog/${post.slug}/`} aria-label={`Read ${post.title}`} class="mt-auto inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-sand hover:underline">
+                Read article <Icon name="diagonal" />
+              </a>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

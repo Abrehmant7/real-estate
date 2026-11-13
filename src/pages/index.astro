@@ -1,9 +1,11 @@
 ---
+import BuyerFaq from '../components/BuyerFaq.astro';
 import BuyingProcess from '../components/BuyingProcess.astro';
 import FeaturedProjects from '../components/FeaturedProjects.astro';
+import HomeAbout from '../components/HomeAbout.astro';
 import HomeHero from '../components/HomeHero.astro';
+import HomeInsights from '../components/HomeInsights.astro';
 import Icon from '../components/Icon.astro';
-import LeadershipTeam from '../components/LeadershipTeam.astro';
 import OfficeDetails from '../components/OfficeDetails.astro';
 import ProjectInquiry from '../components/ProjectInquiry.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
@@ -26,9 +28,10 @@ const comparisonPoints = [
 ---
 
 <SiteLayout title={`${site.name} | Islamabad Property Advisors`} description={`Explore five real estate projects in the Islamabad and Rawalpindi area with local property guidance from ${site.name}.`}>
+  <div data-home-scroll-progress aria-hidden="true" class="home-scroll-progress"></div>
   <HomeHero />
+  <HomeAbout />
   <FeaturedProjects />
-  <ProjectInquiry />
 
   <section id="approach" class="scroll-mt-6 bg-pine py-18 text-paper md:py-24" aria-labelledby="approach-title">
     <div class="site-shell" data-reveal>
@@ -55,7 +58,9 @@ const comparisonPoints = [
   </section>
 
   <BuyingProcess />
-  <LeadershipTeam />
+  <HomeInsights />
+  <BuyerFaq />
+  <ProjectInquiry />
 
   <section id="contact" class="site-shell scroll-mt-6 py-16 md:py-22" aria-labelledby="contact-title">
     <div class="grid gap-8 rounded-2xl border border-rule bg-surface p-7 sm:p-10 md:grid-cols-[1.45fr_1fr] md:items-center md:gap-12 lg:p-14" data-reveal>
@@ -63,7 +68,7 @@ const comparisonPoints = [
         <p class="eyebrow mb-4 text-pine">Get in touch</p>
         <h2 id="contact-title" class="section-heading">Let’s talk property.</h2>
         <p class="mt-4 max-w-[28rem] text-base leading-7 text-muted">Tell us what you’re looking for and which areas of Islamabad you have in mind.</p>
-        <a class="button button-pine mt-6" href="/contact/">Contact our team <Icon name="diagonal" /></a>
+        <a class="button mt-6" href="/contact/">Contact our team <Icon name="diagonal" /></a>
       </div>
 
       <div class="border-t border-rule pt-7 md:border-t-0 md:border-l md:py-4 md:pl-10 lg:pl-14">
@@ -74,7 +79,9 @@ const comparisonPoints = [
 </SiteLayout>
 
 <script>
-  if ('IntersectionObserver' in window) {
+  const motion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+
+  if (motion.matches && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
@@ -82,8 +89,43 @@ const comparisonPoints = [
           observer.unobserve(entry.target);
         }
       }
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08 });
 
     document.querySelectorAll('[data-reveal]').forEach((section) => observer.observe(section));
+  }
+
+  const progress = document.querySelector<HTMLElement>('[data-home-scroll-progress]');
+  const heroImages = document.querySelector<HTMLElement>('#hero-images');
+  const aboutStory = document.querySelector<HTMLElement>('[data-about-story]');
+
+  if (progress && heroImages && motion.matches) {
+    let framePending = false;
+
+    const updateScrollEffects = () => {
+      framePending = false;
+      const viewportHeight = window.innerHeight;
+      const scrollable = document.documentElement.scrollHeight - viewportHeight;
+      const position = Math.max(0, window.scrollY);
+      const ratio = scrollable > 0 ? Math.min(1, position / scrollable) : 0;
+      const storyBounds = aboutStory?.getBoundingClientRect();
+
+      progress.style.setProperty('--scroll-progress', String(ratio));
+      heroImages.style.setProperty('--hero-offset', `${Math.min(22, position * 0.1)}px`);
+
+      if (storyBounds && storyBounds.height > 0) {
+        const storyProgress = (viewportHeight * 0.82 - storyBounds.top) / storyBounds.height;
+        aboutStory?.style.setProperty('--about-progress', String(Math.max(0, Math.min(1, storyProgress))));
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (framePending) return;
+      framePending = true;
+      requestAnimationFrame(updateScrollEffects);
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    scheduleUpdate();
   }
 </script>

@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { projects } from '../data/projects';
+
+const projectNames = new Intl.ListFormat('en', { type: 'conjunction' }).format(projects.map(({ name }) => name));
+const faqs = [
+  { question: 'Which developments can I ask about?', answer: `Our projects page covers ${projectNames}. Tell us which development or block interests you so we can focus your inquiry.`, link: { href: '/projects/', label: 'Browse the projects' } },
+  { question: 'What if I haven’t chosen a project yet?', answer: 'Share your preferred location, budget range, and what you intend to do with the property. Those details give us a starting point for comparing different areas, property types, and payment terms.' },
+  { question: 'How do I request a site visit?', answer: 'Choose the project in the inquiry form and share a few dates that work for you. Ask to see the exact block or unit you’re considering so you can check its access and surroundings in person.' },
+  { question: 'Can I pay for a property in instalments?', answer: 'It depends on the development and the property. Ask for the developer’s current schedule for the specific phase and size, including the booking amount, later payments, and charges due at possession.' },
+  { question: 'Where can I verify a scheme’s approval?', answer: 'Check the official register for the authority that covers the location. Match the scheme name, phase, and boundaries against the property you’re considering, and look for the current approval record.', link: { href: '/blog/check-housing-scheme-noc-islamabad-rawalpindi/', label: 'See how to check a scheme’s NOC' } },
+  { question: 'Can I start the search from overseas?', answer: 'You can send an inquiry from abroad and ask for a remote walkthrough and the property details. If you decide to proceed, confirm what the developer, authority, and any participating bank require for payment and transfer.' },
+  { question: 'What should I include when I get in touch?', answer: 'Tell us which project interests you, what type of property you’re looking for, and your main question. Include your preferred dates if you’re asking about a visit.' },
+];
+---
+
+<section id="faq" class="scroll-mt-6 border-y border-white/10 bg-deep-pine py-16 text-paper md:py-22" aria-labelledby="faq-title">
+  <div class="site-shell grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16">
+    <div data-reveal>
+      <p class="eyebrow mb-4 text-sand">Buyer FAQs</p>
+      <h2 id="faq-title" class="section-heading max-w-[28rem]">Before you book.</h2>
+      <p class="mt-5 max-w-[23rem] leading-7 text-white/75">Answers about choosing a project, arranging a visit, and checking the details before you pay.</p>
+      <a href="#inquiry" class="button mt-6">Ask about a project <Icon name="arrow" /></a>
+    </div>
+
+    <div class="grid gap-2.5" data-reveal style="--reveal-delay: 90ms">
+      {faqs.map(({ question, answer, link }, index) => (
+        <details name="buyer-faq" open={index === 0} class="group rounded-lg border border-sand/20 bg-white/4 open:border-sand/50">
+          <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-5 rounded-lg px-4 py-3.5 font-semibold text-paper transition-colors hover:bg-white/5 sm:px-5 [&::-webkit-details-marker]:hidden">
+            {question}
+            <span class="relative grid size-7 shrink-0 place-items-center rounded-full border border-sand/35 text-sand" aria-hidden="true">
+              <span class="absolute h-px w-3 bg-current"></span>
+              <span class="absolute h-3 w-px bg-current group-open:rotate-90 motion-safe:transition-transform"></span>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-sm leading-6 text-white/80 sm:px-5">
+            <p>{answer}</p>
+            {link && <a href={link.href} class="mt-2 inline-flex min-h-9 items-center gap-2 font-medium text-sand underline-offset-4 hover:underline">{link.label} <Icon name="arrow" class="size-3.5" /></a>}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

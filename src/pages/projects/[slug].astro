@@ -1,0 +1,142 @@
+---
+import Icon from '../../components/Icon.astro';
+import ProjectLandmarks from '../../components/ProjectLandmarks.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { projectInquiryHref, projectPages, type ProjectPage } from '../../data/projects';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return projectPages.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: ProjectPage;
+}
+
+const { project } = Astro.props;
+const { comparison, heroImage, landmarks, map, relatedProject } = project;
+const imageCaption = project.illustrative ? 'Illustrative image' : project.imageCaption;
+const embedParams = new URLSearchParams({ q: map.query, z: String(map.zoom), output: 'embed' });
+const mapsParams = new URLSearchParams({ api: '1', query: map.query });
+---
+
+<SiteLayout title={`${project.name} | ${site.name}`} description={project.summary}>
+  <section class="bg-deep-pine py-10 text-paper md:py-16" aria-labelledby="project-title">
+    <div class="site-shell grid items-center gap-7 md:grid-cols-[1fr_1.1fr] md:gap-12">
+      <div>
+        <a class="mb-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sand hover:underline" href="/projects/">
+          <Icon name="arrow" class="size-4 rotate-180" /> All projects
+        </a>
+        <p class="eyebrow mb-4 text-sand">{project.type}</p>
+        <h1 id="project-title" class="text-[clamp(2.6rem,5.25vw,4.75rem)] leading-[1.02] font-semibold tracking-[-0.06em]">{project.name}</h1>
+        <p class="mt-5 flex items-start gap-2 text-sm font-medium text-sand"><Icon name="pin" class="size-4 shrink-0" /> {project.location}</p>
+        <p class="mt-3 max-w-md leading-7 text-paper/85">{project.summary}</p>
+        <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <a class="button" href={projectInquiryHref(project.slug)}>Ask about this project <Icon name="diagonal" /></a>
+          {relatedProject && (
+            <a class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sand hover:underline" href={`#${relatedProject.slug}`}>
+              {relatedProject.name} <Icon name="chevron" class="size-4" />
+            </a>
+          )}
+          <a class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sand hover:underline" href="#location">
+            <Icon name="pin" /> View map
+          </a>
+        </div>
+      </div>
+      <figure class="relative overflow-hidden rounded-2xl border border-white/15 bg-pine">
+        <img src={heroImage?.src ?? project.image} alt={heroImage?.alt ?? project.imageAlt} decoding="async" fetchpriority="high" class:list={['w-full object-cover', heroImage ? 'aspect-video' : 'aspect-[4/3]']} />
+        {imageCaption && <figcaption class="absolute right-3 bottom-3 rounded-full bg-deep-pine/90 px-3 py-1.5 text-xs text-paper">{imageCaption}</figcaption>}
+      </figure>
+    </div>
+  </section>
+
+  <section class="site-shell py-12 md:py-16" aria-labelledby="overview-title">
+    <h2 id="overview-title" class="section-heading">Project overview</h2>
+    <p class="mt-4 max-w-3xl text-lg leading-8 text-muted">{project.overview}</p>
+    <div class="mt-8 grid gap-5 md:grid-cols-2">
+      {project.sections.map(({ heading, body, links }) => (
+        <div class="rounded-xl border border-rule bg-surface p-6 md:p-7">
+          <h3 class="text-xl font-semibold tracking-tight">{heading}</h3>
+          <p class="mt-2 leading-7 text-muted">{body}</p>
+          {links && (
+            <ul class="mt-3 grid gap-1 text-sm leading-6" role="list">
+              {links.map(({ label, href }) => <li><a class="underline underline-offset-4 hover:text-muted" href={href}>{label}</a></li>)}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {landmarks && (
+    <div class="site-shell pb-12 md:pb-16">
+      <ProjectLandmarks landmarks={landmarks} title="Project highlights" headingId="project-landmarks-title" />
+    </div>
+  )}
+
+  <section class="border-t border-rule bg-surface py-12 md:py-16" aria-labelledby="project-options-title">
+    <div class="site-shell grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:items-start md:gap-12">
+      <h2 id="project-options-title" class="section-heading max-w-md">{comparison.heading}</h2>
+      <dl class="divide-y divide-rule rounded-xl border border-rule bg-paper px-5 md:px-7">
+        {comparison.rows.map(({ label, value }) => (
+          <div class="grid gap-1 py-4 sm:grid-cols-[minmax(8rem,1fr)_1.4fr] sm:gap-5">
+            <dt class="font-semibold">{label}</dt>
+            <dd class="leading-6 text-muted">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  {relatedProject && (
+    <section id={relatedProject.slug} class="border-y border-rule bg-panel py-12 md:py-16" aria-labelledby={`${relatedProject.slug}-title`}>
+      <div class="site-shell grid items-start gap-5 md:grid-cols-[0.75fr_1.25fr] md:gap-12">
+        <div>
+          <p class="eyebrow mb-3 text-pine">{relatedProject.type}</p>
+          <h2 id={`${relatedProject.slug}-title`} class="section-heading">{relatedProject.name}</h2>
+        </div>
+        <div class="max-w-2xl">
+          <p class="text-lg leading-8 text-muted">{relatedProject.overview}</p>
+          <div class="mt-6 grid gap-5 border-t border-rule pt-5">
+            {relatedProject.sections.map(({ heading, body }) => (
+              <div>
+                <h3 class="font-semibold">{heading}</h3>
+                <p class="mt-1 leading-7 text-muted">{body}</p>
+              </div>
+            ))}
+          </div>
+          <a class="button mt-6" href={projectInquiryHref(relatedProject.slug)}>Ask about {relatedProject.name} <Icon name="diagonal" /></a>
+        </div>
+      </div>
+      {relatedProject.landmarks && (
+        <div class="site-shell mt-10 md:mt-14">
+          <ProjectLandmarks landmarks={relatedProject.landmarks} title={`Landmarks in ${relatedProject.name}`} headingId={`${relatedProject.slug}-landmarks-title`} />
+        </div>
+      )}
+    </section>
+  )}
+
+  <section id="location" class="border-t border-rule py-12 md:py-16" aria-labelledby="location-title">
+    <div class="site-shell">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 id="location-title" class="section-heading">Location and directions</h2>
+          <p class="mt-3 max-w-2xl leading-7 text-muted">{map.description}</p>
+        </div>
+        <a class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline" href={`https://www.google.com/maps/search/?${mapsParams}`}>
+          Open in Google Maps <Icon name="diagonal" />
+        </a>
+      </div>
+      <iframe
+        title={`Map for ${project.name}`}
+        src={`https://maps.google.com/maps?${embedParams}`}
+        width="960"
+        height="420"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        class="block h-80 w-full rounded-2xl border border-rule bg-panel md:h-105"
+      ></iframe>
+    </div>
+  </section>
+</SiteLayout>

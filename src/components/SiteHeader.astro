@@ -1,6 +1,7 @@
 ---
 import Brand from './Brand.astro';
 import Icon from './Icon.astro';
+import ProjectNavigation from './ProjectNavigation.astro';
 import { navigation } from '../data/site';
 
 const path = Astro.url.pathname.replace(/\/?$/, '/');
@@ -11,34 +12,40 @@ const links = navigation.map((link) => {
 });
 ---
 
-<header class="relative z-10 border-b border-rule bg-surface">
+<header class="site-header z-10 border-b border-sand/20 bg-deep-pine text-paper">
   <div class="site-shell flex min-h-[4.5rem] items-center justify-between gap-5 md:min-h-[4.875rem]">
-    <Brand />
+    <Brand compact />
 
     <nav class="hidden lg:block" aria-label="Main navigation">
-      <ul class="flex items-center gap-7 text-sm font-medium text-muted">
+      <ul class="flex items-center gap-7 text-sm font-medium text-paper/85">
         {links.map(({ label, href, current }) => (
           <li>
-            <a href={href} aria-current={current} class:list={['py-2 transition-colors hover:text-pine', current && 'font-semibold text-ink underline decoration-sand decoration-2 underline-offset-8']}>
-              {label}
-            </a>
+            {href === '/projects/' ? <ProjectNavigation /> : (
+              <a href={href} aria-current={current} class:list={['py-2 transition-colors hover:text-sand', current && 'font-semibold text-paper underline decoration-sand decoration-2 underline-offset-8']}>
+                {label}
+              </a>
+            )}
           </li>
         ))}
       </ul>
     </nav>
 
-    <a class="button button-pine hidden lg:inline-flex" href="/contact/#inquiry">Get in touch <Icon name="diagonal" /></a>
+    <a class="button hidden lg:inline-flex" href="/contact/#inquiry">Get in touch <Icon name="diagonal" /></a>
 
     <details class="group lg:hidden" data-mobile-nav>
-      <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-full border border-rule text-pine [&::-webkit-details-marker]:hidden">
+      <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-full border border-sand/20 text-sand [&::-webkit-details-marker]:hidden">
         <span class="sr-only">Main menu</span>
         <Icon name="menu" class="size-5 group-open:hidden" />
         <Icon name="close" class="hidden size-5 group-open:block" />
       </summary>
-      <nav class="absolute inset-x-0 top-full border-b border-rule bg-surface py-4 shadow-md" aria-label="Main navigation">
+      <nav class="absolute inset-x-0 top-full max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-b border-sand/20 bg-deep-pine py-4 shadow-md" aria-label="Main navigation">
         <ul class="site-shell grid gap-1 text-sm font-medium">
           {links.map(({ label, href, current }) => (
-            <li><a class:list={['block rounded px-2 py-3 hover:bg-paper', current && 'bg-paper font-semibold text-pine']} href={href} aria-current={current}>{label}</a></li>
+            <li>
+              {href === '/projects/' ? <ProjectNavigation mobile /> : (
+                <a class:list={['block rounded px-2 py-3 hover:bg-sand/10', current && 'bg-sand/10 font-semibold text-sand']} href={href} aria-current={current}>{label}</a>
+              )}
+            </li>
           ))}
         </ul>
       </nav>
@@ -48,6 +55,36 @@ const links = navigation.map((link) => {
 
 <script>
   const menu = document.querySelector<HTMLDetailsElement>('[data-mobile-nav]');
+  const projectMenus = document.querySelectorAll<HTMLDetailsElement>('[data-project-nav]');
+
+  projectMenus.forEach((projects) => {
+    projects.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && projects.open) {
+        event.stopPropagation();
+        projects.open = false;
+        projects.querySelector('summary')?.focus();
+      }
+    });
+
+    projects.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) {
+        projects.open = false;
+        projects.querySelector('summary')?.focus();
+      }
+    });
+
+    projects.addEventListener('focusout', (event) => {
+      if (event.relatedTarget instanceof Node && !projects.contains(event.relatedTarget)) projects.open = false;
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Node)) return;
+    const target = event.target;
+    projectMenus.forEach((projects) => {
+      if (!projects.contains(target)) projects.open = false;
+    });
+  });
 
   menu?.addEventListener('click', (event) => {
     if (event.target instanceof Element && event.target.closest('a')) {
